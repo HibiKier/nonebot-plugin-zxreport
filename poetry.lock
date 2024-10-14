@@ -576,21 +576,6 @@ pydantic = ">=1.10.0,<2.5.0 || >2.5.0,<2.5.1 || >2.5.1,<3.0.0"
 typing-extensions = ">=4.0.0,<5.0.0"
 
 [[package]]
-name = "nonebot-plugin-session"
-version = "0.3.2"
-description = "Nonebot2 会话信息提取与会话id定义"
-optional = false
-python-versions = "<4.0,>=3.9"
-files = [
-    {file = "nonebot_plugin_session-0.3.2-py3-none-any.whl", hash = "sha256:785e74ff656e46d84c4dbbac125f9a9adebcc4b9ff7db700527e6e47d47aabd6"},
-    {file = "nonebot_plugin_session-0.3.2.tar.gz", hash = "sha256:da0dabe9108151052a6e83d9923068d2ec43a93810ad37b264ed65aee2c69f93"},
-]
-
-[package.dependencies]
-nonebot2 = ">=2.3.0,<3.0.0"
-strenum = ">=0.4.15,<0.5.0"
-
-[[package]]
 name = "nonebot-plugin-waiter"
 version = "0.8.0"
 description = "An alternative for got-and-reject in Nonebot"
@@ -1048,22 +1033,6 @@ files = [
 ]
 
 [[package]]
-name = "strenum"
-version = "0.4.15"
-description = "An Enum that inherits from str."
-optional = false
-python-versions = "*"
-files = [
-    {file = "StrEnum-0.4.15-py3-none-any.whl", hash = "sha256:a30cda4af7cc6b5bf52c8055bc4bf4b2b6b14a93b574626da33df53cf7740659"},
-    {file = "StrEnum-0.4.15.tar.gz", hash = "sha256:878fb5ab705442070e4dd1929bb5e2249511c0bcf2b0eeacf3bcd80875c82eff"},
-]
-
-[package.extras]
-docs = ["myst-parser[linkify]", "sphinx", "sphinx-rtd-theme"]
-release = ["twine"]
-test = ["pylint", "pytest", "pytest-black", "pytest-cov", "pytest-pylint"]
-
-[[package]]
 name = "tarina"
 version = "0.6.1"
 description = "A collection of common utils for Arclet"
@@ -1336,4 +1305,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "5a88de76b777791f19c5da30fd10d873e26199a8c20e82c63b457d3874eae6e9"
+content-hash = "39e3782b294fd4912129f9e7dc9072331c89dc4aabfd3d16d58fdc1cbb4235da"

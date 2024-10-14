@@ -1,5 +1,10 @@
+from nonebot import require
 from nonebot.log import logger
 from nonebot.plugin import PluginMetadata
+
+require("nonebot_plugin_alconna")
+require("nonebot_plugin_htmlrender")
+
 from nonebot_plugin_alconna import Alconna, Image, UniMessage, on_alconna
 
 from .data_source import Report
