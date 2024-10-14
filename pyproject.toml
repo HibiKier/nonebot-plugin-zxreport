@@ -1,0 +1,80 @@
+[tool.poetry]
+name = "nonebot-plugin-zxreport"
+version = "0.1.0"
+description = "真寻日报"
+authors = ["HibiKier <775757368@qq.com>"]
+license = "AGPL3.0"
+readme = "README.md"
+homepage = "https://github.com/HibiKier/nonebot-plugin-zxreport"
+repository = "https://github.com/HibiKier/nonebot-plugin-zxreport"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+nonebot2 = "^2.3.3"
+nonebot-plugin-alconna = ">=0.46.3,<1.0.0"
+nonebot-plugin-session = "^0.3.2"
+nonebot-plugin-htmlrender = "^0.3.5"
+zhdate = "^0.1"
+nonebot-plugin-localstore = "^0.7.1"
+httpx = "^0.27.2"
+
+
+[tool.black]
+line-length = 88
+target-version = ["py39", "py310", "py311", "py312"]
+include = '\.pyi?$'
+extend-exclude = '''
+'''
+
+[tool.ruff]
+line-length = 88
+target-version = "py310"
+
+[tool.ruff.lint]
+select = [
+    "F",     # Pyflakes
+    "W",     # pycodestyle warnings
+    "E",     # pycodestyle errors
+    "UP",    # pyupgrade
+    "ASYNC", # flake8-async
+    "C4",    # flake8-comprehensions
+    "T10",   # flake8-debugger
+    "T20",   # flake8-print
+    "PYI",   # flake8-pyi
+    "PT",    # flake8-pytest-style
+    "Q",     # flake8-quotes
+    "RUF",   # Ruff-specific rules
+]
+ignore = [
+    "E402",   # module-import-not-at-top-of-file
+    "UP037",  # quoted-annotation
+    "RUF001", # ambiguous-unicode-character-string
+    "RUF002", # ambiguous-unicode-character-docstring
+    "RUF003", # ambiguous-unicode-character-comment
+]
+
+[tool.ruff.lint.flake8-pytest-style]
+fixture-parentheses = false
+mark-parentheses = false
+
+[tool.pyright]
+pythonVersion = "3.10"
+pythonPlatform = "All"
+defineConstant = { PYDANTIC_V2 = true }
+executionEnvironments = [
+    { root = "./tests", extraPaths = [
+        "./",
+    ] },
+    { root = "./" },
+]
+
+typeCheckingMode = "standard"
+reportShadowedImports = false
+disableBytesTypePromotions = true
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
