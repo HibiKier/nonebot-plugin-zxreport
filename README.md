@@ -49,6 +49,7 @@ nb plugin install nonebot-plugin-zxreport
 
 ## 🎁 效果图
 
+![_](https://github.com/HibiKier/nonebot-plugin-zxreport/blob/main/docs_image/1.png)
 
 ## ❤ 感谢
 
