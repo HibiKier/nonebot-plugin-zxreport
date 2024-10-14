@@ -1,9 +1,10 @@
 from nonebot import require
 from nonebot.log import logger
-from nonebot.plugin import PluginMetadata
+from nonebot.plugin import PluginMetadata, inherit_supported_adapters
 
 require("nonebot_plugin_alconna")
 require("nonebot_plugin_htmlrender")
+require("nonebot_plugin_localstore")
 
 from nonebot_plugin_alconna import Alconna, Image, UniMessage, on_alconna
 
@@ -16,6 +17,11 @@ __plugin_meta__ = PluginMetadata(
     指令：
         真寻日报
     """.strip(),
+    type="application",
+    homepage="https://github.com/HibiKier/nonebot-plugin-zxreport",
+    supported_adapters=inherit_supported_adapters(
+        "nonebot_plugin_alconna",
+    ),
     extra={"author": "HibiKier", "version": "0.1"},
 )
 
