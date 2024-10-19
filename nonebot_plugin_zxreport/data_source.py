@@ -53,12 +53,13 @@ class Report:
     }
 
     @classmethod
-    async def get_report_image(cls) -> Path:
+    async def get_report_image(cls) -> bytes:
         """获取数据"""
         now = datetime.now()
         file = REPORT_PATH / f"{now.date()}.png"
         if file.exists():
-            return file
+            with file.open("rb") as image_file:
+                return image_file.read()
         zhdata = ZhDate.from_datetime(now)
         data = {
             "data_festival": cls.festival_calculation(),
@@ -82,7 +83,7 @@ class Report:
             wait=2,
         )
         await save(image_bytes)
-        return file
+        return image_bytes
 
     @classmethod
     def festival_calculation(cls) -> list[tuple[str, str]]:

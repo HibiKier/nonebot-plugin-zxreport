@@ -51,7 +51,7 @@ async def _():
 async def _():
     try:
         path = await Report.get_report_image()
-        await UniMessage(Image(path=path)).send()
+        await UniMessage(Image(raw=path)).send()
         logger.info("查看真寻日报")
     except TimeoutError:
         await UniMessage("真寻日报生成超时...").send(at_sender=True)
