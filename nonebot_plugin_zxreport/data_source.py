@@ -24,7 +24,7 @@ class AsyncHttpx:
     @classmethod
     async def get(cls, url: str) -> Response:
         async with httpx.AsyncClient() as client:
-            return await client.get(url)
+            return await client.get(url, timeout=30)
 
 
 @run_sync

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "nonebot-plugin-zxreport"
-version = "0.2.2"
+version = "0.2.3"
 description = "真寻日报"
 authors = ["HibiKier <775757368@qq.com>"]
 license = "AGPL3.0"
