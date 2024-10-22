@@ -16,6 +16,7 @@ nonebot-plugin-htmlrender = "^0.3.5"
 zhdate = "^0.1"
 nonebot-plugin-localstore = "^0.7.1"
 httpx = "^0.27.2"
+tenacity = "^9.0.0"
 
 
 [tool.black]

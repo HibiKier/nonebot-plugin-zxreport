@@ -1,12 +1,15 @@
 import xml.etree.ElementTree as ET
 from datetime import datetime
-from pathlib import Path
 
 import httpx
-from httpx import Response
+from httpx import Response, HTTPStatusError, TimeoutException, ConnectError
 from nonebot.utils import run_sync
+from nonebot.log import logger
 from nonebot_plugin_htmlrender import template_to_pic
+import tenacity
 from zhdate import ZhDate
+from tenacity import retry, stop_after_attempt, wait_fixed
+
 
 from .config import (
     REPORT_PATH,
@@ -20,11 +23,25 @@ from .config import (
 
 
 class AsyncHttpx:
-
     @classmethod
+    @retry(
+        stop=stop_after_attempt(3),
+        wait=wait_fixed(1),
+        retry=(
+            tenacity.retry_if_exception_type(
+                (TimeoutException, ConnectError, HTTPStatusError)
+            )
+        ),
+    )
     async def get(cls, url: str) -> Response:
         async with httpx.AsyncClient() as client:
-            return await client.get(url, timeout=30)
+            try:
+                response = await client.get(url)
+                response.raise_for_status()
+                return response
+            except (TimeoutException, ConnectError, HTTPStatusError) as e:
+                logger.error(f"Request to {url} failed due to: {e}")
+                raise
 
 
 @run_sync
