@@ -1,5 +1,6 @@
 from pathlib import Path
 
+import nonebot
 import nonebot_plugin_localstore as store
 from pydantic import BaseModel
 
@@ -7,6 +8,15 @@ REPORT_PATH = store.get_plugin_cache_file("mahiro_report")
 REPORT_PATH.mkdir(parents=True, exist_ok=True)
 
 TEMPLATE_PATH = Path(__file__).parent
+
+
+class Conifg(BaseModel):
+
+    alapi_token: str = ""
+    """alapi token，在https://admin.alapi.cn/user/login登录后获取token"""
+
+
+config = nonebot.get_plugin_config(Conifg)
 
 
 class Hitokoto(BaseModel):

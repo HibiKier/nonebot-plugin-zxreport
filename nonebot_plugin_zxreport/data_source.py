@@ -2,14 +2,13 @@ import xml.etree.ElementTree as ET
 from datetime import datetime
 
 import httpx
-from httpx import Response, HTTPStatusError, TimeoutException, ConnectError
-from nonebot.utils import run_sync
-from nonebot.log import logger
-from nonebot_plugin_htmlrender import template_to_pic
 import tenacity
-from zhdate import ZhDate
+from httpx import ConnectError, HTTPStatusError, Response, TimeoutException
+from nonebot.log import logger
+from nonebot.utils import run_sync
+from nonebot_plugin_htmlrender import template_to_pic
 from tenacity import retry, stop_after_attempt, wait_fixed
-
+from zhdate import ZhDate
 
 from .config import (
     REPORT_PATH,
@@ -17,6 +16,7 @@ from .config import (
     Anime,
     Hitokoto,
     SixData,
+    config,
     favs_arr,
     favs_list,
 )
@@ -43,6 +43,28 @@ class AsyncHttpx:
                 logger.error(f"Request to {url} failed due to: {e}")
                 raise
 
+    @classmethod
+    @retry(
+        stop=stop_after_attempt(3),
+        wait=wait_fixed(1),
+        retry=(
+            tenacity.retry_if_exception_type(
+                (TimeoutException, ConnectError, HTTPStatusError)
+            )
+        ),
+    )
+    async def post(
+        cls, url: str, data: dict[str, str], headers: dict[str, str]
+    ) -> Response:
+        async with httpx.AsyncClient() as client:
+            try:
+                response = await client.post(url, data=data, headers=headers)
+                response.raise_for_status()
+                return response
+            except (TimeoutException, ConnectError, HTTPStatusError) as e:
+                logger.error(f"Request to {url} failed due to: {e}")
+                raise
+
 
 @run_sync
 def save(data: bytes):
@@ -53,6 +75,7 @@ def save(data: bytes):
 
 class Report:
     hitokoto_url = "https://v1.hitokoto.cn/?c=a"
+    alapi_url = "https://v2.alapi.cn/api/zaobao"
     six_url = "https://60s.viki.moe/?v2=1"
     game_url = "https://www.4gamers.com.tw/rss/latest-news"
     bili_url = "https://s.search.bilibili.com/main/hotword"
@@ -133,8 +156,22 @@ class Report:
         return [item["keyword"] for item in data["list"]]
 
     @classmethod
+    async def get_alapi_data(cls) -> list[str]:
+        """获取alapi数据"""
+        payload = {"token": config.alapi_token, "format": "json"}
+        headers = {"Content-Type": "application/x-www-form-urlencoded"}
+        res = await AsyncHttpx.post(cls.alapi_url, data=payload, headers=headers)
+        if res.status_code != 200:
+            return ["Error: Unable to fetch data"]
+        data = res.json()
+        news_items = data.get("data", {}).get("news", [])
+        return news_items[:11] if len(news_items) > 11 else news_items
+
+    @classmethod
     async def get_six(cls) -> list[str]:
-        """获取60s看时间数据"""
+        """获取60s数据"""
+        if config.alapi_token:
+            return await cls.get_alapi_data()
         res = await AsyncHttpx.get(cls.six_url)
         data = SixData(**res.json())
         return data.data.news[:11] if len(data.data.news) > 11 else data.data.news

@@ -12,7 +12,7 @@ require("nonebot_plugin_localstore")
 
 from nonebot_plugin_alconna import Alconna, Image, UniMessage, on_alconna
 
-from .config import REPORT_PATH
+from .config import REPORT_PATH, Conifg
 from .data_source import Report
 
 __plugin_meta__ = PluginMetadata(
@@ -23,6 +23,7 @@ __plugin_meta__ = PluginMetadata(
         真寻日报
     """.strip(),
     type="application",
+    config=Conifg,
     homepage="https://github.com/HibiKier/nonebot-plugin-zxreport",
     supported_adapters=inherit_supported_adapters(
         "nonebot_plugin_alconna",

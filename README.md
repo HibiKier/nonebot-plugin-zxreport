@@ -41,7 +41,13 @@ pip install nonebot-plugin-zxreport
 nb plugin install nonebot-plugin-zxreport
 ```
 
+| 配置                    | 类型 |            默认值             | 说明                                                             |
+| :---------------------- | :--: | :---------------------------: | ---------------------------------------------------------------- |
+| alapi_token          | str  |           ""           |  60s看世界api替换，当存在该配置时，使用alapi早报api，在https://admin.alapi.cn/user/login登录后获取token                                                |
+
+
 ## 🎁 使用
+
 
 ```python
 真寻日报
