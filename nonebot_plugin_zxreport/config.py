@@ -13,7 +13,9 @@ TEMPLATE_PATH = Path(__file__).parent
 class Conifg(BaseModel):
 
     alapi_token: str = ""
-    """alapi token，在https://admin.alapi.cn/user/login登录后获取token"""
+    """alapi token，在 https://admin.alapi.cn/user/login 登录后获取token"""
+    auto_send: bool = True
+    """每日9点自动发送"""
 
 
 config = nonebot.get_plugin_config(Conifg)

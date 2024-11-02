@@ -1,6 +1,7 @@
+import asyncio
 from datetime import datetime
 
-from nonebot import require
+from nonebot import get_bots, require
 from nonebot.log import logger
 from nonebot.permission import SUPERUSER
 from nonebot.plugin import PluginMetadata, inherit_supported_adapters
@@ -9,10 +10,14 @@ from playwright.async_api import TimeoutError
 require("nonebot_plugin_alconna")
 require("nonebot_plugin_htmlrender")
 require("nonebot_plugin_localstore")
+require("nonebot_plugin_apscheduler")
+require("nonebot_plugin_uninfo")
 
-from nonebot_plugin_alconna import Alconna, Image, UniMessage, on_alconna
+from nonebot_plugin_alconna import Alconna, Image, Target, UniMessage, on_alconna
+from nonebot_plugin_apscheduler import scheduler
+from nonebot_plugin_uninfo import get_interface
 
-from .config import REPORT_PATH, Conifg
+from .config import REPORT_PATH, Conifg, config
 from .data_source import Report
 
 __plugin_meta__ = PluginMetadata(
@@ -57,3 +62,37 @@ async def _():
     except TimeoutError:
         await UniMessage("真寻日报生成超时...").send(at_sender=True)
         logger.error("真寻日报生成超时")
+
+
+@scheduler.scheduled_job(
+    "cron",
+    hour=0,
+    minute=1,
+)
+async def _():
+    for _ in range(3):
+        try:
+            await Report.get_report_image()
+            logger.info("自动生成日报成功...")
+            break
+        except TimeoutError:
+            logger.warning("自动生成日报失败...")
+
+
+@scheduler.scheduled_job(
+    "cron",
+    hour=9,
+    minute=1,
+)
+async def _():
+    if config.auto_send:
+        file = await Report.get_report_image()
+        for _, bot in get_bots().items():
+            if interface := get_interface(bot):
+                scenes = [s for s in await interface.get_scenes() if s.is_group]
+                for scene in scenes:
+                    await UniMessage(Image(raw=file)).send(
+                        bot=bot, target=Target(scene.id)
+                    )
+                    await asyncio.sleep(1)
+        logger.info("每日真寻日报发送完成...")
