@@ -1,12 +1,12 @@
-import random
 import asyncio
+import random
 from datetime import datetime
 
+from nonebot import get_bots, require
 from nonebot.log import logger
-from nonebot import require, get_bots
 from nonebot.permission import SUPERUSER
-from playwright.async_api import TimeoutError
 from nonebot.plugin import PluginMetadata, inherit_supported_adapters
+from playwright.async_api import TimeoutError
 
 require("nonebot_plugin_alconna")
 require("nonebot_plugin_htmlrender")
@@ -14,24 +14,24 @@ require("nonebot_plugin_localstore")
 require("nonebot_plugin_apscheduler")
 require("nonebot_plugin_uninfo")
 
-from nonebot_plugin_apscheduler import scheduler
-from nonebot_plugin_uninfo import Uninfo, get_interface
 from nonebot_plugin_alconna import (
-    Args,
-    Image,
-    Query,
-    Option,
-    Target,
     Alconna,
+    Args,
     Arparma,
+    Image,
     MultiVar,
+    Option,
+    Query,
+    Target,
     UniMessage,
     on_alconna,
     store_true,
 )
+from nonebot_plugin_apscheduler import scheduler
+from nonebot_plugin_uninfo import Uninfo, get_interface
 
-from .data_source import Report, group_manager
 from .config import REPORT_PATH, Conifg, config
+from .data_source import Report, group_manager
 
 __plugin_meta__ = PluginMetadata(
     name="真寻日报",
@@ -137,8 +137,8 @@ async def _():
 
 @scheduler.scheduled_job(
     "cron",
-    hour=13,
-    minute=35,
+    hour=9,
+    minute=1,
 )
 async def _():
     if not config.auto_send:
