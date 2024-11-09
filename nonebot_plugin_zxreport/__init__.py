@@ -60,6 +60,7 @@ _status_matcher = on_alconna(
     ),
     priority=5,
     block=True,
+    permission=SUPERUSER,
 )
 
 _status_matcher.shortcut(
