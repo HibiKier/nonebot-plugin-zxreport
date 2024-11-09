@@ -6,6 +6,8 @@ from pydantic import BaseModel
 
 REPORT_PATH = store.get_plugin_cache_file("mahiro_report")
 REPORT_PATH.mkdir(parents=True, exist_ok=True)
+DATA_PATH = store.get_plugin_data_dir()
+DATA_PATH.mkdir(parents=True, exist_ok=True)
 
 TEMPLATE_PATH = Path(__file__).parent
 

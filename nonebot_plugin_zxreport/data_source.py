@@ -1,4 +1,5 @@
 import asyncio
+import json
 import xml.etree.ElementTree as ET
 from datetime import datetime
 
@@ -12,6 +13,7 @@ from tenacity import retry, stop_after_attempt, wait_fixed
 from zhdate import ZhDate
 
 from .config import (
+    DATA_PATH,
     REPORT_PATH,
     TEMPLATE_PATH,
     Anime,
@@ -21,6 +23,35 @@ from .config import (
     favs_arr,
     favs_list,
 )
+
+
+class GroupManage:
+
+    def __init__(self):
+        self._file = DATA_PATH / "data.json"
+        self._data = []
+        if self._file.exists():
+            data = json.load(self._file.open(encoding="utf8"))
+            self._data = data["close"]
+
+    def add(self, group_id: str):
+        if group_id not in self._data:
+            self._data.append(group_id)
+
+    def remove(self, group_id: str):
+        if group_id in self._data:
+            self._data.remove(group_id)
+
+    def check(self, group_id: str) -> bool:
+        logger.debug(f"检测日报发送群组: {group_id}:{group_id in self._data}")
+        return group_id in self._data
+
+    def save(self):
+        with self._file.open("w", encoding="utf8") as file:
+            json.dump({"close": self._data}, file, ensure_ascii=False, indent=4)
+
+
+group_manager = GroupManage()
 
 
 class AsyncHttpx:
