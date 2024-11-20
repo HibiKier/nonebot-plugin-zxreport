@@ -46,7 +46,7 @@ __plugin_meta__ = PluginMetadata(
     supported_adapters=inherit_supported_adapters(
         "nonebot_plugin_alconna",
     ),
-    extra={"author": "HibiKier", "version": "0.1"},
+    extra={"author": "HibiKier", "version": "0.3"},
 )
 
 
@@ -64,14 +64,14 @@ _status_matcher = on_alconna(
 )
 
 _status_matcher.shortcut(
-    "^开启真寻日报",
+    "开启真寻日报",
     command="report-status",
     arguments=["{%0}"],
     prefix=True,
 )
 
 _status_matcher.shortcut(
-    "^关闭真寻日报",
+    "关闭真寻日报",
     command="report-status",
     arguments=["--close", "{%0}"],
     prefix=True,
