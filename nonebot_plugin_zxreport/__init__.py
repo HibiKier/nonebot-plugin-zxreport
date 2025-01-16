@@ -1,6 +1,6 @@
 import asyncio
-import random
 from datetime import datetime
+import random
 
 from nonebot import get_bots, require
 from nonebot.log import logger
@@ -28,7 +28,7 @@ from nonebot_plugin_alconna import (
     store_true,
 )
 from nonebot_plugin_apscheduler import scheduler
-from nonebot_plugin_uninfo import Uninfo, get_interface
+from nonebot_plugin_uninfo import get_interface
 
 from .config import REPORT_PATH, Conifg, config
 from .data_source import Report, group_manager

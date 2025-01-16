@@ -1,14 +1,14 @@
 import asyncio
+from datetime import datetime
 import json
 import xml.etree.ElementTree as ET
-from datetime import datetime
 
 import httpx
-import tenacity
 from httpx import ConnectError, HTTPStatusError, Response, TimeoutException
 from nonebot.log import logger
 from nonebot.utils import run_sync
 from nonebot_plugin_htmlrender import template_to_pic
+import tenacity
 from tenacity import retry, stop_after_attempt, wait_fixed
 from zhdate import ZhDate
 
@@ -20,13 +20,11 @@ from .config import (
     Hitokoto,
     SixData,
     config,
-    favs_arr,
-    favs_list,
 )
+from .date import get_festivals_dates
 
 
 class GroupManage:
-
     def __init__(self):
         self._file = DATA_PATH / "data.json"
         self._data = []
@@ -128,10 +126,10 @@ class Report:
     async def get_report_image(cls) -> bytes:
         """获取数据"""
         now = datetime.now()
-        file = REPORT_PATH / f"{now.date()}.png"
-        if file.exists():
-            with file.open("rb") as image_file:
-                return image_file.read()
+        # file = REPORT_PATH / f"{now.date()}.png"
+        # if file.exists():
+        #     with file.open("rb") as image_file:
+        #         return image_file.read()
         zhdata = ZhDate.from_datetime(now)
         result = await asyncio.gather(
             *[
@@ -143,7 +141,7 @@ class Report:
             ]
         )
         data = {
-            "data_festival": cls.festival_calculation(),
+            "data_festival": get_festivals_dates(),
             "data_hitokoto": result[0],
             "data_bili": result[1],
             "data_six": result[2],
@@ -152,6 +150,7 @@ class Report:
             "week": cls.week[now.weekday()],
             "date": now.date(),
             "zh_date": zhdata.chinese().split()[0][5:],
+            "full_show": config.zxrepot_full_show,
         }
         image_bytes = await template_to_pic(
             template_path=str((TEMPLATE_PATH / "mahiro_report").absolute()),
@@ -165,22 +164,6 @@ class Report:
         )
         await save(image_bytes)
         return image_bytes
-
-    @classmethod
-    def festival_calculation(cls) -> list[tuple[str, str]]:
-        """计算节日"""
-        base_date = datetime(2016, 1, 1)
-        n = (datetime.now() - base_date).days
-        result = []
-
-        for i in range(0, len(favs_arr), 2):
-            if favs_arr[i] >= n:
-                result.extend(
-                    (favs_arr[i + j] - n, favs_list[favs_arr[i + j + 1]])
-                    for j in range(0, 14, 2)
-                )
-                break
-        return result
 
     @classmethod
     async def get_hitokoto(cls) -> str:
